@@ -1,0 +1,61 @@
+from pydantic import BaseModel, Field
+from typing import Optional, Any
+from datetime import datetime
+
+
+# --- Frontend: POST /api/v1/diagnosis ---
+class DiagnosisCreateRequest(BaseModel):
+    raw_log: str
+    metadata: Optional[dict] = None
+    source: str = "paste"
+
+
+class DiagnosisCreateResponse(BaseModel):
+    diagnosis_id: int
+    status: str
+
+
+# --- Frontend: GET /api/v1/diagnosis/{id} ---
+class ResultDetail(BaseModel):
+    oom_type: str
+    constraint_type: str
+    confidence: float
+    root_cause: str
+    action_guide: Any
+
+
+class DiagnosisDetailResponse(BaseModel):
+    diagnosis_id: int
+    status: str
+    raw_log_preview: Optional[str] = None
+    metadata: Optional[dict] = None
+    result: Optional[ResultDetail] = None
+
+
+# --- Frontend: GET /api/v1/diagnosis ---
+class DiagnosisListItem(BaseModel):
+    diagnosis_id: int
+    status: str
+    created_at: datetime
+    oom_type: Optional[str] = None
+
+
+# --- AI: GET /api/v1/diagnosis/pending ---
+class PendingDiagnosisResponse(BaseModel):
+    diagnosis_id: int
+    raw_log: str
+    metadata: Optional[dict] = None
+
+
+# --- AI: PATCH /api/v1/diagnosis/{id}/status ---
+class StatusUpdateRequest(BaseModel):
+    status: str = Field(..., pattern="^(running|failed)$")
+
+
+# --- AI: POST /api/v1/diagnosis/{id}/result ---
+class ResultCreateRequest(BaseModel):
+    oom_type: str
+    constraint_type: str
+    confidence: float = Field(..., ge=0.0, le=1.0)
+    root_cause: str
+    action_guide: Any

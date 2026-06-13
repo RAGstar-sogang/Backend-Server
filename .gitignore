@@ -1,0 +1,40 @@
+# 1. Python & FastAPI Environment
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+venv/
+env/
+.venv/
+lib/
+lib64/
+
+# 2. Environment Variables (보안 핵심)
+.env
+.env.*
+!.env.example # 환경 변수 템플릿은 공유해야 하므로 제외하지 않습니다.
+
+# 3. Vector Database (임베디드 모드)
+# 명세서 4.3항에 정의된 PersistentClient 경로
+chroma_db/
+
+# 4. Data & Logs (보안 핵심)
+# 사내 시스템 로그와 장애 정보는 민감한 내부 정보이므로 절대 커밋하면 안 됩니다.
+data/*.jsonl
+data/*.log
+data/*.csv
+data/raw/
+docs/
+logs/
+tests/
+experiments/
+
+# 5. IDE & OS specific
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# 6. EC2 백엔드 추가 항목 (SQLite DB / 루트 레벨 로그)
+*.db
+*.log
